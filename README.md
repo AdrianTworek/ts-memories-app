@@ -17,7 +17,7 @@ Full-stack MERN application which simplifies creating and storing memories.
 - Creating categories where you can add associated cards
 - Dynamic pagination
 - Previewing images with either horizontal or vertical view
-- Snackbars informinng about adding/removing resource
+- Snackbars informing about adding/removing resource
 - Different modals 
 
 ## Technologies and tools
