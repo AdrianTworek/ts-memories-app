@@ -173,7 +173,10 @@ const Auth: FC = () => {
     }
   }, [isSignUp])
 
-  const handleAuthModalClose = () => setOpen(false)
+  const handleAuthModalClose = () => {
+    dispatch(clearAuthErrorActionCreator())
+    setOpen(false)
+  }
 
   const handleChangeFormMode = () => {
     resetForm()
@@ -197,6 +200,8 @@ const Auth: FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    setOpen(true)
 
     if (validate()) {
       setLoading(true)
