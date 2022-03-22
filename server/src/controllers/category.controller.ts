@@ -12,7 +12,6 @@ const sendCategory = (
 
 export const createCategory = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    // @ts-ignore
     const user = await User.findOne({ _id: req.user })
 
     const category = await Category.create({
@@ -24,7 +23,6 @@ export const createCategory = catchAsync(
       return next(new ApiError('User or category not found', 404))
     }
 
-    // @ts-ignore
     await User.findByIdAndUpdate(req.user, {
       $addToSet: { categories: category },
     })
@@ -35,7 +33,6 @@ export const createCategory = catchAsync(
 
 export const getCategories = async (req: Request, res: Response) => {
   try {
-    // @ts-ignore
     const user = await User.findOne({ _id: req.user }).populate({
       path: 'categories',
       populate: [
@@ -80,7 +77,6 @@ export const deleteCategory = catchAsync(
       return next(new ApiError('Category not found', 404))
     }
 
-    // @ts-ignore
     await User.findByIdAndUpdate(req.user, {
       $pull: { categories: req.params.id },
     })

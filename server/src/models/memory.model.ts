@@ -33,8 +33,7 @@ const memorySchema = new mongoose.Schema(
       type: String,
     },
     user: {
-      // @ts-ignore
-      type: mongoose.Schema.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: [true, 'Memory must belong to a user'],
     },

@@ -13,15 +13,13 @@ const categorySchema = new mongoose.Schema(
       required: [true, 'Category must have a name'],
     },
     user: {
-      // @ts-ignore
-      type: mongoose.Schema.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: [true, 'Category must belong to a user'],
     },
     memories: [
       {
-        // @ts-ignore
-        type: mongoose.Schema.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Memory',
       },
     ],

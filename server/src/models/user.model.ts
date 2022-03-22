@@ -43,11 +43,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      // validate: {
-      //   validator: function(confirmPassword: string): boolean {
-      //     return confirmPassword === this.password
-      //   }
-      // }
     },
     memoriesNumber: {
       type: Number,
@@ -55,16 +50,14 @@ const userSchema = new mongoose.Schema(
     },
     favorites: [
       {
-        // @ts-ignore
-        type: mongoose.Schema.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Memory',
         default: [],
       },
     ],
     categories: [
       {
-        // @ts-ignore
-        type: mongoose.Schema.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',
         default: [],
       },

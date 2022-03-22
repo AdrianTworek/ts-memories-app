@@ -16,7 +16,6 @@ export const createMemory = catchAsync(
       return next(new ApiError('Bad request', 400))
     }
 
-    // @ts-ignore
     await User.findByIdAndUpdate(req.user, { $inc: { memoriesNumber: 1 } })
 
     sendMemory(res, 201, memory)
@@ -66,12 +65,21 @@ export const removeMemoryFromCategory = catchAsync(
 export const getMemories = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     let category = req.query.category || 'all'
-    // @ts-ignore
-    const page = +req.query.page || 1
-    // @ts-ignore
-    const limit = +req.query.limit || 3
-    // @ts-ignore
-    const skip = (page - 1) * limit
+
+    let page, limit, skip
+    if (req.query.page) {
+      page = +req.query.page
+    } else {
+      page = 1
+    }
+
+    if (req.query.limit) {
+      limit = +req.query.limit
+    } else {
+      limit = 3
+    }
+
+    skip = (page - 1) * limit
 
     let memories, userCategory
     let idxOfFirstInCategory,
@@ -93,17 +101,10 @@ export const getMemories = catchAsync(
     } else {
       // Show all memories handler
       if (limit === 10) {
-        memories = await Memory
-          // @ts-ignore
-          .find({ user: req.user })
-          .skip(skip)
+        memories = await Memory.find({ user: req.user }).skip(skip)
       } else {
         // Show particular number of memories
-        memories = await Memory
-          // @ts-ignore
-          .find({ user: req.user })
-          .skip(skip)
-          .limit(limit)
+        memories = await Memory.find({ user: req.user }).skip(skip).limit(limit)
       }
     }
 
@@ -151,11 +152,10 @@ export const deleteMemory = catchAsync(
     }
 
     // Delete memory if it was in user's favorites
-    await User.findByIdAndUpdate(
-      // @ts-ignore
-      req.user,
-      { $pull: { favorites: req.params.id }, $inc: { memoriesNumber: -1 } }
-    )
+    await User.findByIdAndUpdate(req.user, {
+      $pull: { favorites: req.params.id },
+      $inc: { memoriesNumber: -1 },
+    })
 
     res.status(204).json({
       status: 'success',
@@ -165,7 +165,6 @@ export const deleteMemory = catchAsync(
 
 export const getFavoriteMemories = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    // @ts-ignore
     const user = await User.findOne({ _id: req.user }).populate('favorites')
 
     if (!user) {
@@ -187,11 +186,7 @@ export const addMemoryToFavorites = catchAsync(
       return next(new ApiError('Memory not found', 404))
     }
 
-    await User.findByIdAndUpdate(
-      // @ts-ignore
-      req.user,
-      { $addToSet: { favorites: memory } }
-    )
+    await User.findByIdAndUpdate(req.user, { $addToSet: { favorites: memory } })
 
     sendMemory(res, 200, memory)
   }
@@ -199,18 +194,13 @@ export const addMemoryToFavorites = catchAsync(
 
 export const removeMemoryFromFavorites = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    // @ts-ignore
     const memory = await Memory.findOne({ _id: req.params.id })
 
     if (!memory) {
       return next(new ApiError('Memory not found', 404))
     }
 
-    await User.findByIdAndUpdate(
-      // @ts-ignore
-      req.user,
-      { $pull: { favorites: memory._id } }
-    )
+    await User.findByIdAndUpdate(req.user, { $pull: { favorites: memory._id } })
 
     res.status(204).json({
       status: 'success',
